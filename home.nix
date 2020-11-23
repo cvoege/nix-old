@@ -2,13 +2,18 @@
 let
   inherit (pkgs.stdenv) isDarwin isLinux;
   promptChar = if pkgs.stdenv.isDarwin then "ᛗ" else "ᛥ";
+  personalEmail = "benaduggan@gmail.com";
+  workEmail = "ben@hackerrank.com";
+  firstName = "Ben";
+  lastName = "Duggan";
+  username = if isDarwin then "benduggan" else "bduggan";
 in {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  home.username = if isDarwin then "benduggan" else "bduggan";
+  home.username = username;
   home.homeDirectory =
-    if isDarwin then "/Users/benduggan" else "/home/bduggan";
+    if isDarwin then "/Users/${username}" else "/home/${username}";
   home.stateVersion = "21.03";
 
   home.packages = with pkgs; [
@@ -27,6 +32,8 @@ in {
     file
     figlet
     gawk
+    git
+    gitAndTools.delta
     gnugrep
     gnused
     gnutar
@@ -79,6 +86,8 @@ in {
     which
     xxd
     zip
+
+    # Comma - run nix programs without installing them
     (with pkgs;
       writeShellScriptBin "," ''
         cmd=$1
@@ -101,7 +110,12 @@ in {
           } "$attr" --command "$@"
         fi
       '')
+    (writeShellScriptBin "hms" ''
+      git -C ~/.config/nixpkgs/ pull origin main
+      home-manager switch
+    '')
   ];
+
 
   programs.starship.enable = true;
   programs.starship.settings = {
@@ -131,5 +145,44 @@ in {
     cmd_duration.disabled = true;
     gcloud.disabled = true;
     package.disabled = true;
+  };
+
+  # gitconfig
+  programs.git = {
+    enable = true;
+    userName = "${firstName} ${lastName}";
+    userEmail = personalEmail;
+    aliases = {
+      co = "checkout";
+      cam = "commit -am";
+      ca = "commit -a";
+      cm = "commit -m";
+      st = "status";
+      br = "branch -v";
+      branch-name = "!git rev-parse --abbrev-ref HEAD";
+      # Push current branch
+      put = "!git push origin $(git branch-name)";
+      # Pull without merging
+      get = "!git pull origin $(git branch-name) --ff-only";
+      # Pull Master without switching branches
+      got =
+        "!f() { CURRENT_BRANCH=$(git branch-name) && git checkout $1 && git pull origin $1 --ff-only && git checkout $CURRENT_BRANCH;  }; f";
+      lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
+      lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
+
+      # delete local branch and pull from remote
+      fetchout = "!f() { git co master; git branch -D $@; git fetch && git co $@; }; f";
+      pufl = "!git push origin $(git branch-name) --force-with-lease";
+      putf = "put --force-with-lease";
+    };
+    extraConfig = {
+      color.ui = true;
+      push.default = "simple";
+      pull.ff = "only";
+      core = {
+        editor = if isDarwin then "code --wait" else "vim";
+        pager = "delta --dark";
+      };
+    };
   };
 }
