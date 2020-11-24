@@ -28,6 +28,7 @@ in {
     direnv
     dos2unix
     ed
+    exa
     fd
     file
     figlet
@@ -80,6 +81,7 @@ in {
     starship
     swaks
     time
+    tmux
     unzip
     watch
     wget
@@ -116,6 +118,18 @@ in {
     '')
   ];
 
+  home.file.sqliterc = {
+    target = ".sqliterc";
+    text = ''
+      .output /dev/null
+      .headers on
+      .mode column
+      .prompt "> " ". "
+      .separator ROW "\n"
+      .nullvalue NULL
+      .output stdout
+    '';
+  };
 
   programs.starship.enable = true;
   programs.starship.settings = {
