@@ -17,6 +17,7 @@ in {
   home.stateVersion = "21.03";
 
   home.packages = with pkgs; [
+    (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
     atool
     bc
     bzip2
@@ -185,7 +186,8 @@ in {
       lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
 
       # delete local branch and pull from remote
-      fetchout = "!f() { git co master; git branch -D $@; git fetch && git co $@; }; f";
+      fetchout =
+        "!f() { git co master; git branch -D $@; git fetch && git co $@; }; f";
       pufl = "!git push origin $(git branch-name) --force-with-lease";
       putf = "put --force-with-lease";
     };
