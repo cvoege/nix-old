@@ -1,12 +1,21 @@
 { config, pkgs, ... }:
 let
   inherit (pkgs.stdenv) isDarwin isLinux;
+  inherit (pkgs) fetchFromGitHub;
   promptChar = if pkgs.stdenv.isDarwin then "ᛗ" else "ᛥ";
   personalEmail = "benaduggan@gmail.com";
   workEmail = "ben@hackerrank.com";
   firstName = "Ben";
   lastName = "Duggan";
   username = if isDarwin then "benduggan" else "bduggan";
+
+  # chief keefs stuff
+  kwbauson-cfg = import (fetchFromGitHub {
+    owner = "kwbauson";
+    repo = "cfg";
+    rev = "cd73ff040e5f28695c7557a70ad7c5b2e9e8c2be";
+    sha256 = "1szlpmi8dyiwcv8xlwflb9czrijxbkzs2bz6034g8ivaxy30kxl8";
+  });
 in {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -89,34 +98,10 @@ in {
     which
     xxd
     zip
-
-    # Comma - run nix programs without installing them
-    (with pkgs;
-      writeShellScriptBin "," ''
-        cmd=$1
-        db=${path + "/programs.sqlite"}
-        sql="select distinct package from Programs where name = '$cmd'"
-        packages=$(${sqlite}/bin/sqlite3 -init /dev/null "$db" "$sql" 2>/dev/null)
-        if [[ $(echo "$packages" | wc -l) = 1 ]];then
-          if [[ -z $packages ]];then
-            echo "$cmd": command not found
-            exit 127
-          else
-            attr=$packages
-          fi
-        else
-          attr=$(echo "$packages" | ${fzy}/bin/fzy)
-        fi
-        if [[ -n $attr ]];then
-          exec ${nixUnstable}/bin/nix --experimental-features 'nix-command = nix-flakes' shell -f ${
-            toString path
-          } "$attr" --command "$@"
-        fi
-      '')
-    (writeShellScriptBin "hms" ''
-      git -C ~/.config/nixpkgs/ pull origin main
-      home-manager switch
-    '')
+    kwbauson-cfg.better-comma
+    kwbauson-cfg.nle
+    kwbauson-cfg.fordir
+    kwbauson-cfg.git-trim
   ];
 
   home.file.sqliterc = {
