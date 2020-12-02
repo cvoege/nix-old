@@ -201,7 +201,8 @@ in with pkgs.hax; {
 
     initExtra = ''
       shopt -s histappend
-      PROMPT_COMMAND='history -a;history -n'
+      set +h
+      # PROMPT_COMMAND='history -a;history -n'
 
       export DO_NOT_TRACK=1
 
