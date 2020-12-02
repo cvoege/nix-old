@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 let
-  inherit (pkgs.stdenv) isDarwin isLinux;
-  inherit (pkgs) fetchFromGitHub;
-  promptChar = if pkgs.stdenv.isDarwin then "ᛗ" else "ᛥ";
+  inherit (pkgs.hax) isDarwin fetchFromGitHub;
+
+  promptChar = if isDarwin then "ᛗ" else "ᛥ";
   personalEmail = "benaduggan@gmail.com";
   workEmail = "ben@hackerrank.com";
   firstName = "Ben";
@@ -16,105 +16,207 @@ let
     rev = "cd73ff040e5f28695c7557a70ad7c5b2e9e8c2be";
     sha256 = "1szlpmi8dyiwcv8xlwflb9czrijxbkzs2bz6034g8ivaxy30kxl8";
   });
-in {
+
+in with pkgs.hax; {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
-  home.username = username;
-  home.homeDirectory =
-    if isDarwin then "/Users/${username}" else "/home/${username}";
-  home.stateVersion = "21.03";
+  home = {
+    username = username;
+    homeDirectory =
+      if isDarwin then "/Users/${username}" else "/home/${username}";
 
-  home.packages = with pkgs; [
-    (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
-    atool
-    bc
-    bzip2
-    cachix
-    coreutils-full
-    cowsay
-    curl
-    diffutils
-    direnv
-    dos2unix
-    ed
-    exa
-    fd
-    file
-    figlet
-    gawk
-    git
-    gitAndTools.delta
-    gnugrep
-    gnused
-    gnutar
-    gzip
-    htop
-    less
-    libarchive
-    libnotify
-    lolcat
-    loop
-    lsof
-    man-pages
-    moreutils
-    nano
-    ncdu
-    netcat-gnu
-    nix-direnv
-    nix-bash-completions
-    nix-index
-    nix-info
-    nix-prefetch-github
-    nix-prefetch-scripts
-    nix-tree
-    nixfmt
-    nmap
-    openssh
-    p7zip
-    patch
-    perl
-    php
-    pigz
-    pssh
-    procps
-    pv
-    ranger
-    re2c
-    ripgrep
-    ripgrep-all
-    rlwrap
-    rsync
-    scc
-    sd
-    socat
-    starship
-    swaks
-    time
-    tmux
-    unzip
-    watch
-    wget
-    which
-    xxd
-    zip
-    kwbauson-cfg.better-comma
-    kwbauson-cfg.nle
-    kwbauson-cfg.fordir
-    kwbauson-cfg.git-trim
-  ];
+    stateVersion = "21.03";
 
-  home.file.sqliterc = {
-    target = ".sqliterc";
-    text = ''
-      .output /dev/null
-      .headers on
-      .mode column
-      .prompt "> " ". "
-      .separator ROW "\n"
-      .nullvalue NULL
-      .output stdout
+    sessionVariables = {
+      EDITOR = "vim";
+      HISTCONTROL = "ignoreboth";
+      PAGER = "less";
+      LESS = "-iR";
+      BASH_SILENCE_DEPRECATION_WARNING = "1";
+    };
+
+    packages = with pkgs; [
+      (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
+      atool
+      bc
+      bzip2
+      cachix
+      coreutils-full
+      cowsay
+      curl
+      diffutils
+      direnv
+      dos2unix
+      ed
+      exa
+      fd
+      file
+      figlet
+      gawk
+      git
+      gitAndTools.delta
+      gnugrep
+      gnused
+      gnutar
+      gzip
+      htop
+      less
+      libarchive
+      libnotify
+      lolcat
+      loop
+      lsof
+      man-pages
+      moreutils
+      nano
+      ncdu
+      netcat-gnu
+      nix-direnv
+      nix-bash-completions
+      nix-index
+      nix-info
+      nix-prefetch-github
+      nix-prefetch-scripts
+      nix-tree
+      nixfmt
+      nmap
+      openssh
+      p7zip
+      patch
+      perl
+      php
+      pigz
+      pssh
+      procps
+      pv
+      ranger
+      re2c
+      ripgrep
+      ripgrep-all
+      rlwrap
+      rsync
+      scc
+      sd
+      socat
+      starship
+      swaks
+      time
+      tmux
+      unzip
+      watch
+      wget
+      which
+      xxd
+      zip
+      kwbauson-cfg.better-comma
+      kwbauson-cfg.nle
+      kwbauson-cfg.fordir
+      kwbauson-cfg.git-trim
+      (writeShellScriptBin "hms" ''
+        git -C ~/.config/nixpkgs/ pull origin main
+        home-manager switch
+      '')
+    ];
+
+    file.sqliterc = {
+      target = ".sqliterc";
+      text = ''
+        .output /dev/null
+        .headers on
+        .mode column
+        .prompt "> " ". "
+        .separator ROW "\n"
+        .nullvalue NULL
+        .output stdout
+      '';
+    };
+  };
+
+  programs.bash = {
+    enable = true;
+    inherit (config.home) sessionVariables;
+    historyFileSize = -1;
+    historySize = -1;
+    shellAliases = {
+      l = "exa -alFT -L 1";
+      ll = "ls -ahlFG";
+      mkdir = "mkdir -pv";
+      hm = "home-manager";
+      wrun =
+        "watchexec --debounce 50 --no-shell --clear --restart --signal SIGTERM -- ";
+
+      # git
+      g = "git";
+      ga = "g add -A .";
+      cm = "g commit -m ";
+
+      # docker
+      d = "docker";
+      da = "docker ps -a";
+      di = "docker images";
+      de = "docker exec -it";
+      dr = "docker run --rm -it";
+      daq = "docker ps -aq";
+      drma = "docker stop $(docker ps -aq) && docker rm -f $(docker ps -aq)";
+      drmi = "di | grep none | awk '{print $3}' | sponge | xargs docker rmi";
+      dc = "docker-compose";
+
+      # k8s
+      k = "kubectl";
+      kx = "kubectx";
+      ka = "k get pods";
+      kaw = "k get pods -o wide";
+      knuke = "k delete pods --grace-period=0 --force";
+      klist =
+        "k get pods --all-namespaces -o jsonpath='{..image}' | tr -s '[[:space:]]' '\\n' | sort | uniq -c";
+
+      # aws stuff
+      aws_id = "aws sts get-caller-identity --query Account --output text";
+
+      # misc
+      rot13 = "tr 'A-Za-z' 'N-ZA-Mn-za-m'";
+      space = "du -Sh | sort -rh | head -10";
+      now = "date +%s";
+
+      # local_ops
+      local_ops = "nix-local-env run -d ~/code/hr/local_ops python dev.py";
+      lo = "local_ops";
+      lor = "lo run";
+      los = "lo status";
+
+      #nix
+      nixconf = "cd ~/.config/nixpkgs";
+    };
+
+    initExtra = ''
+      shopt -s histappend
+      PROMPT_COMMAND='history -a;history -n'
+
+      export DO_NOT_TRACK=1
+
+      # add local scripts to path
+      export PATH="$PATH:$HOME/.bin/"
+
+      # asdf and base nix
+      source /usr/local/opt/asdf/asdf.sh
+      source /usr/local/opt/asdf/etc/bash_completion.d/asdf.bash
+      source ~/.nix-profile/etc/profile.d/nix.sh
+
+      # bash completions
+      source <(kubectl completion bash)
+      source ~/.nix-profile/etc/profile.d/bash_completion.sh
+      source ~/.nix-profile/etc/bash_completion.d/better-comma.sh
+      source ~/.nix-profile/share/bash-completion/completions/git
+
+      # starship
+      eval "$(starship init bash)"
     '';
+  };
+
+  programs.direnv = {
+    enable = true;
+    enableNixDirenvIntegration = true;
   };
 
   programs.starship.enable = true;
@@ -175,6 +277,7 @@ in {
         "!f() { git co master; git branch -D $@; git fetch && git co $@; }; f";
       pufl = "!git push origin $(git branch-name) --force-with-lease";
       putf = "put --force-with-lease";
+      shake = "remote prune origin";
     };
     extraConfig = {
       color.ui = true;
