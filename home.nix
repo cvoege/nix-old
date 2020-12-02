@@ -38,7 +38,11 @@ in with pkgs.hax; {
 
     packages = with pkgs; [
       (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
+      amazon-ecr-credential-helper
       atool
+      bash-completion
+      bashInteractive
+      bat
       bc
       bzip2
       cachix
@@ -59,8 +63,10 @@ in with pkgs.hax; {
       gnugrep
       gnused
       gnutar
+      gron
       gzip
       htop
+      jq
       less
       libarchive
       libnotify
@@ -68,6 +74,7 @@ in with pkgs.hax; {
       loop
       lsof
       man-pages
+      mcfly
       moreutils
       nano
       ncdu
@@ -98,13 +105,16 @@ in with pkgs.hax; {
       rsync
       scc
       sd
+      shellcheck
+      shfmt
       socat
-      starship
+      starship  
       swaks
       time
       tmux
       unzip
       watch
+      watchexec
       wget
       which
       xxd
@@ -199,8 +209,13 @@ in with pkgs.hax; {
       export PATH="$PATH:$HOME/.bin/"
 
       # asdf and base nix
+    '' + (if isDarwin then ''
       source /usr/local/opt/asdf/asdf.sh
       source /usr/local/opt/asdf/etc/bash_completion.d/asdf.bash
+    '' else ''
+      source $HOME/.asdf/asdf.sh
+      source $HOME/.asdf/completions/asdf.bash
+    '') + ''
       source ~/.nix-profile/etc/profile.d/nix.sh
 
       # bash completions
