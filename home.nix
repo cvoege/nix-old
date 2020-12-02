@@ -2,7 +2,6 @@
 let
   inherit (pkgs.hax) isDarwin fetchFromGitHub;
 
-  promptChar = if isDarwin then "ᛗ" else "ᛥ";
   personalEmail = "benaduggan@gmail.com";
   workEmail = "ben@hackerrank.com";
   firstName = "Ben";
@@ -108,7 +107,7 @@ in with pkgs.hax; {
       shellcheck
       shfmt
       socat
-      starship  
+      starship
       swaks
       time
       tmux
@@ -238,10 +237,10 @@ in with pkgs.hax; {
   programs.starship.enable = true;
   programs.starship.settings = {
     add_newline = false;
-    character = {
-      symbol = promptChar;
-      success_symbol = "[${promptChar}](bright-green)";
-      error_symbol = "[${promptChar}](bright-red)";
+    character = rec {
+      symbol = if isDarwin then "ᛗ" else "ᛥ";
+      success_symbol = "[${symbol}](bright-green)";
+      error_symbol = "[${symbol}](bright-red)";
     };
     golang = {
       style = "fg:#00ADD8";
