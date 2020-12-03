@@ -9,12 +9,7 @@ let
   username = if isDarwin then "benduggan" else "bduggan";
 
   # chief keefs stuff
-  kwbauson-cfg = import (fetchFromGitHub {
-    owner = "kwbauson";
-    repo = "cfg";
-    rev = "cd73ff040e5f28695c7557a70ad7c5b2e9e8c2be";
-    sha256 = "1szlpmi8dyiwcv8xlwflb9czrijxbkzs2bz6034g8ivaxy30kxl8";
-  });
+  kwbauson-cfg = import <kwbauson-cfg>;
 
 in with pkgs.hax; {
   # Let Home Manager install and manage itself.
