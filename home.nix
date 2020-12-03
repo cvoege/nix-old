@@ -44,7 +44,6 @@ in with pkgs.hax; {
       cowsay
       curl
       diffutils
-      direnv
       dos2unix
       ed
       exa
@@ -52,7 +51,6 @@ in with pkgs.hax; {
       file
       figlet
       gawk
-      git
       gitAndTools.delta
       gnugrep
       gnused
@@ -68,7 +66,6 @@ in with pkgs.hax; {
       loop
       lsof
       man-pages
-      mcfly
       moreutils
       nano
       ncdu
@@ -102,7 +99,6 @@ in with pkgs.hax; {
       shellcheck
       shfmt
       socat
-      starship
       swaks
       time
       tmux
@@ -191,12 +187,13 @@ in with pkgs.hax; {
 
       #nix
       nixconf = "cd ~/.config/nixpkgs";
+
+      fzfp = "fzf --preview 'bat --style=numbers --color=always {}'";
     };
 
     initExtra = ''
       shopt -s histappend
       set +h
-      # PROMPT_COMMAND='history -a;history -n'
 
       export DO_NOT_TRACK=1
 
@@ -218,15 +215,25 @@ in with pkgs.hax; {
       source ~/.nix-profile/etc/profile.d/bash_completion.sh
       source ~/.nix-profile/etc/bash_completion.d/better-comma.sh
       source ~/.nix-profile/share/bash-completion/completions/git
-
-      # starship
-      eval "$(starship init bash)"
+      source ~/.nix-profile/share/bash-completion/completions/ssh
     '';
   };
 
   programs.direnv = {
     enable = true;
     enableNixDirenvIntegration = true;
+  };
+
+  programs.mcfly = {
+    enable = true;
+    enableBashIntegration = true;
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableBashIntegration = false;
+    defaultCommand = "fd -tf -c always -H --ignore-file ${./ignore} -E .git";
+    defaultOptions = words "--ansi --reverse --multi --filepath-word";
   };
 
   programs.starship.enable = true;
@@ -262,6 +269,7 @@ in with pkgs.hax; {
   # gitconfig
   programs.git = {
     enable = true;
+    package = pkgs.gitAndTools.gitFull;
     userName = "${firstName} ${lastName}";
     userEmail = personalEmail;
     aliases = {
