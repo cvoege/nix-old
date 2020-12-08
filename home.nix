@@ -100,6 +100,7 @@ in with pkgs.hax; {
       shfmt
       socat
       swaks
+      tealdeer
       time
       tmux
       unzip
