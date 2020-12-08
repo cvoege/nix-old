@@ -102,7 +102,6 @@ in with pkgs.hax; {
       swaks
       tealdeer
       time
-      tmux
       unzip
       watch
       watchexec
@@ -269,7 +268,28 @@ in with pkgs.hax; {
     package.disabled = true;
   };
 
-  # gitconfig
+  programs.tmux = {
+    enable = true;
+    tmuxp.enable = true;
+    historyLimit = 500000;
+    shortcut = "j";
+    extraConfig = ''
+      # ijkl arrow key style pane selection
+      bind -n M-j select-pane -L
+      bind -n M-i select-pane -U
+      bind -n M-k select-pane -D
+      bind -n M-l select-pane -R
+
+      # split panes using | and -
+      bind | split-window -h
+      bind - split-window -v
+      unbind '"'
+      unbind %
+
+      set-option -g mouse on
+    '';
+  };
+
   programs.git = {
     enable = true;
     package = pkgs.gitAndTools.gitFull;
