@@ -11,6 +11,19 @@ let
   # chief keefs stuff
   kwbauson-cfg = import <kwbauson-cfg>;
 
+  coinSound = pkgs.fetchurl {
+    url = "https://themushroomkingdom.net/sounds/wav/smw/smw_coin.wav";
+    sha256 = "18c7dfhkaz9ybp3m52n1is9nmmkq18b1i82g6vgzy7cbr2y07h93";
+  };
+  guhSound = pkgs.fetchurl {
+    url = "https://cobi.dev/sounds/guh.wav";
+    sha256 = "1chr6fagj6sgwqphrgbg1bpmyfmcd94p39d34imq5n9ik674z9sa";
+  };
+  bruhSound = pkgs.fetchurl {
+    url = "https://cobi.dev/sounds/bruh.mp3";
+    sha256 = "11n1a20a7fj80xgynfwiq3jaq1bhmpsdxyzbnmnvlsqfnsa30vy3";
+  };
+
 in with pkgs.hax; {
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
@@ -99,6 +112,7 @@ in with pkgs.hax; {
       shellcheck
       shfmt
       socat
+      sox
       swaks
       tealdeer
       time
@@ -117,6 +131,9 @@ in with pkgs.hax; {
         git -C ~/.config/nixpkgs/ pull origin main
         home-manager switch
       '')
+      (soundScript "coin" coinSound)
+      (soundScript "guh" guhSound)
+      (soundScript "bruh" bruhSound)
     ];
 
     file.sqliterc = {
