@@ -12,7 +12,7 @@ let
   kwbauson-cfg = import <kwbauson-cfg>;
 
   coinSound = pkgs.fetchurl {
-    url = "https://themushroomkingdom.net/sounds/wav/smw/smw_coin.wav";
+    url = "https://cobi.dev/sounds/coin.wav";
     sha256 = "18c7dfhkaz9ybp3m52n1is9nmmkq18b1i82g6vgzy7cbr2y07h93";
   };
   guhSound = pkgs.fetchurl {
@@ -42,6 +42,9 @@ in with pkgs.hax; {
       LESS = "-iR";
       BASH_SILENCE_DEPRECATION_WARNING = "1";
     };
+
+    programs.htop.enable = true;
+    programs.dircolors.enable = true;
 
     packages = with pkgs; [
       (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
@@ -156,6 +159,7 @@ in with pkgs.hax; {
     historyFileSize = -1;
     historySize = -1;
     shellAliases = {
+      ls = "ls --color=auto";
       l = "exa -alFT -L 1";
       ll = "ls -ahlFG";
       mkdir = "mkdir -pv";
