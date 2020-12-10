@@ -43,9 +43,6 @@ in with pkgs.hax; {
       BASH_SILENCE_DEPRECATION_WARNING = "1";
     };
 
-    programs.htop.enable = true;
-    programs.dircolors.enable = true;
-
     packages = with pkgs; [
       (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
       amazon-ecr-credential-helper
@@ -310,6 +307,9 @@ in with pkgs.hax; {
       set-option -g mouse on
     '';
   };
+
+  programs.htop.enable = true;
+  programs.dircolors.enable = true;
 
   programs.git = {
     enable = true;
