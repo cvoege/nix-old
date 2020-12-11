@@ -56,6 +56,7 @@ in with pkgs.hax; {
       coreutils-full
       cowsay
       curl
+      deno
       diffutils
       dos2unix
       ed
