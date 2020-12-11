@@ -204,7 +204,10 @@ in with pkgs.hax; {
       los = "lo status";
 
       #nix
-      nixconf = "cd ~/.config/nixpkgs";
+      nixc = "cd ~/.config/nixpkgs";
+
+      startvm = "VBoxManage startvm ubuntu-server-20.04 --type headless";
+      stopvm = "VBoxManage controlvm ubuntu-server-20.04 acpipowerbutton";
 
       fzfp = "fzf --preview 'bat --style=numbers --color=always {}'";
     };
