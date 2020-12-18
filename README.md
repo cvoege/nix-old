@@ -30,6 +30,7 @@ mv ~/.profile ~/.profile.old
 mv ~/.bashrc ~/.bashrc.old
 mv ~/.bash_profile ~/.bash_profile.old
 mv ~/.gitconfig ~/.gitconfig.old
+mv ~/.tmux.conf ~/.tmux.conf.old
 
 # enable home-manager and build packages
 home-manager switch
