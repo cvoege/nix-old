@@ -6,7 +6,8 @@ let
   workEmail = "ben@hackerrank.com";
   firstName = "Ben";
   lastName = "Duggan";
-  username = if isDarwin then "benduggan" else "bduggan";
+  home = (builtins.getEnv "HOME");
+  username = (builtins.getEnv "USER");
 
   # chief keefs stuff
   kwbauson-cfg = import <kwbauson-cfg>;
@@ -30,8 +31,7 @@ in with pkgs.hax; {
 
   home = {
     username = username;
-    homeDirectory =
-      if isDarwin then "/Users/${username}" else "/home/${username}";
+    homeDirectory = home;
 
     stateVersion = "21.03";
 
@@ -199,7 +199,7 @@ in with pkgs.hax; {
       now = "date +%s";
 
       # local_ops
-      local_ops = "nix-local-env run -d ~/code/hr/local_ops python dev.py";
+      local_ops = "nix-local-env run -d $HOME/hr/local_ops python dev.py";
       lo = "local_ops";
       lor = "lo run";
       los = "lo status";
@@ -219,7 +219,7 @@ in with pkgs.hax; {
 
       export DO_NOT_TRACK=1
 
-      export MONOREPO_DIR="$HOME/code/mimir/mimir"
+      export MONOREPO_DIR="$HOME/mimir"
 
       # add local scripts to path
       export PATH="$PATH:$HOME/.bin/"
