@@ -199,7 +199,7 @@ in with pkgs.hax; {
       now = "date +%s";
 
       # local_ops
-      local_ops = "nix-local-env run -d $HOME/hr/local_ops python dev.py";
+      local_ops = "nix-local-env -d $HOME/hr/local_ops run python dev.py";
       lo = "local_ops";
       lor = "lo run";
       los = "lo status";
@@ -291,7 +291,7 @@ in with pkgs.hax; {
   };
 
   programs.tmux = {
-    enable = true;
+    # enable = true;
     tmuxp.enable = true;
     historyLimit = 500000;
     shortcut = "j";
