@@ -53,6 +53,7 @@ in with pkgs.hax; {
       bc
       bzip2
       cachix
+      ungoogled-chromium
       coreutils-full
       cowsay
       curl
