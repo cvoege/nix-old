@@ -208,8 +208,7 @@ in with pkgs.hax; {
       #nix
       nixc = "cd ~/.config/nixpkgs";
 
-      startvm = "VBoxManage startvm ubuntu-server-20.04 --type headless";
-      stopvm = "VBoxManage controlvm ubuntu-server-20.04 acpipowerbutton";
+      stop-classroom = "docker kill  $(docker ps -a | grep class | awk '{print $1}') && docker kill  $(docker ps -a | grep integration | awk '{print $1}')"
 
       fzfp = "fzf --preview 'bat --style=numbers --color=always {}'";
     };
@@ -223,7 +222,7 @@ in with pkgs.hax; {
       export MONOREPO_DIR="$HOME/mimir"
 
       # add local scripts to path
-      export PATH="$PATH:$HOME/.bin/"
+      export PATH="$PATH:$HOME/.bin/:$HOME/.local/bin"
 
       # asdf and base nix
     '' + (if isDarwin then ''
