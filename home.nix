@@ -208,7 +208,7 @@ in with pkgs.hax; {
       #nix
       nixc = "cd ~/.config/nixpkgs";
 
-      stop-classroom = "docker kill  $(docker ps -a | grep class | awk '{print $1}') && docker kill  $(docker ps -a | grep integration | awk '{print $1}')"
+      stop-classroom = "docker kill  $(docker ps -a | grep class | awk '{print $1}') && docker kill  $(docker ps -a | grep integration | awk '{print $1}')";
 
       fzfp = "fzf --preview 'bat --style=numbers --color=always {}'";
     };
