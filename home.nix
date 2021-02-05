@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   inherit (pkgs.hax) isDarwin fetchFromGitHub;
 
@@ -43,7 +43,8 @@ in with pkgs.hax; {
       BASH_SILENCE_DEPRECATION_WARNING = "1";
     };
 
-    packages = with pkgs; [
+    packages = with lib; with pkgs; lib.flatten [
+      (lib.optional stdenv.isLinux ungoogled-chromium)
       (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
       amazon-ecr-credential-helper
       atool
@@ -53,7 +54,6 @@ in with pkgs.hax; {
       bc
       bzip2
       cachix
-      ungoogled-chromium
       coreutils-full
       cowsay
       curl
