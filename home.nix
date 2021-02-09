@@ -2,10 +2,11 @@
 let
   inherit (pkgs.hax) isDarwin fetchFromGitHub;
 
-  personalEmail = "benaduggan@gmail.com";
-  workEmail = "ben@hackerrank.com";
-  firstName = "Ben";
-  lastName = "Duggan";
+  personalEmail = "cvoege+nix@gmail.com";
+  workEmail = "colton+nix@hackerrank.com";
+  firstName = "Colton";
+  lastName = "Voege";
+  nameHint = "V as in Victor";
   home = (builtins.getEnv "HOME");
   username = (builtins.getEnv "USER");
 
@@ -24,8 +25,10 @@ let
     url = "https://cobi.dev/sounds/bruh.mp3";
     sha256 = "11n1a20a7fj80xgynfwiq3jaq1bhmpsdxyzbnmnvlsqfnsa30vy3";
   };
-
 in with pkgs.hax; {
+  # help:
+  # https://rycee.gitlab.io/home-manager/options.html
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
@@ -33,10 +36,12 @@ in with pkgs.hax; {
     username = username;
     homeDirectory = home;
 
+    # The global home manager state version
     stateVersion = "21.03";
 
     sessionVariables = {
-      EDITOR = "vim";
+      # Fuck you keith
+      EDITOR = "nano";
       HISTCONTROL = "ignoreboth";
       PAGER = "less";
       LESS = "-iR";
@@ -138,6 +143,40 @@ in with pkgs.hax; {
       (soundScript "bruh" bruhSound)
     ];
 
+    file.gitmessage = {
+      target = ".gitmessage";
+      text = ''
+        # [Tag]: Subject
+        []:
+
+        # Why
+
+        # Meta
+
+
+
+        # Tag should be one of the following:
+        # * Feature (new feature)
+        # * Bugfix (bug fix)
+        # * QOL (Quality of Life fix)
+        # * Documentation (changes to documentation)
+        # * Style (change in code format, no logic change)
+        # * Refactor (refactoring production code)
+        # * Test (adding missing tests, refactoring tests; no production code change)
+        # * Chore (updating webpack or gulp tasks etc; no production code change)
+
+        # The first line should contain a type and a subject in the imperative tone.
+        #     i.e. [Feature]: Add dropdown list to contact select form.
+
+        # In the "Why" section, take a few lines to explain why this change was needed,
+        # what code the change effects, and any possible side effects of the change.
+
+        # Use "Meta" to add useful information like issue tracking id, signature (if working
+        # on an open source project, give a relevant identification), and any other relevant information
+        # about the project itself.
+      '';
+    };
+
     file.sqliterc = {
       target = ".sqliterc";
       text = ''
@@ -210,7 +249,7 @@ in with pkgs.hax; {
 
       stop-classroom = "docker kill  $(docker ps -a | grep class | awk '{print $1}') && docker kill  $(docker ps -a | grep integration | awk '{print $1}')";
 
-      fzfp = "fzf --preview 'bat --style=numbers --color=always {}'";
+      # fzfp = "fzf --preview 'bat --style=numbers --color=always {}'";
     };
 
     initExtra = ''
@@ -235,7 +274,6 @@ in with pkgs.hax; {
       source ~/.nix-profile/etc/profile.d/nix.sh
 
       # bash completions
-      source <(kubectl completion bash)
       source ~/.nix-profile/etc/profile.d/bash_completion.sh
       source ~/.nix-profile/etc/bash_completion.d/better-comma.sh
       source ~/.nix-profile/share/bash-completion/completions/git
@@ -253,12 +291,12 @@ in with pkgs.hax; {
     enableBashIntegration = true;
   };
 
-  programs.fzf = {
-    enable = true;
-    enableBashIntegration = false;
-    defaultCommand = "fd -tf -c always -H --ignore-file ${./ignore} -E .git";
-    defaultOptions = words "--ansi --reverse --multi --filepath-word";
-  };
+  # programs.fzf = {
+  #   enable = true;
+  #   enableBashIntegration = false;
+  #   defaultCommand = "fd -tf -c always -H --ignore-file ${./ignore} -E .git";
+  #   defaultOptions = words "--ansi --reverse --multi --filepath-word";
+  # };
 
   programs.starship.enable = true;
   programs.starship.settings = {
@@ -308,7 +346,7 @@ in with pkgs.hax; {
       unbind '"'
       unbind %
 
-      set-option -g mouse on
+      set-option -g mouse off
     '';
   };
 
@@ -350,7 +388,7 @@ in with pkgs.hax; {
       push.default = "simple";
       pull.ff = "only";
       core = {
-        editor = if isDarwin then "code --wait" else "vim";
+        editor = if isDarwin then "code --wait" else "nano";
         pager = "delta --dark";
       };
     };

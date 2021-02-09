@@ -23,7 +23,7 @@ nix-shell '<home-manager>' -A install
 
 # pull repo into ~/.config/nixpkgs/
 cd ~/.config/nixpkgs
-git clone git@github.com:benaduggan/nix.git .
+git clone git@github.com:cvoege/nix.git .
 
 # move unneeded files
 mv ~/.profile ~/.profile.old
