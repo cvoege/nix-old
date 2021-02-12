@@ -15,7 +15,8 @@ mkdir -p ~/.config/nix/
 echo 'max-jobs = auto' >>~/.config/nix/nix.conf
 
 # Add necessary nix channels
-nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
+# nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
+# nix-channel --add nixpkgs https://nixos.org/channels/nixpkgs-unstable nixpkgs
 nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 nix-channel --add https://github.com/kwbauson/cfg/archive/main.tar.gz kwbauson-cfg
 nix-channel --update
@@ -23,6 +24,7 @@ nix-shell '<home-manager>' -A install
 
 # pull repo into ~/.config/nixpkgs/
 cd ~/.config/nixpkgs
+rm ~/.config/nixpkgs/*
 git clone git@github.com:cvoege/nix.git .
 
 # move unneeded files

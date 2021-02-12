@@ -259,6 +259,7 @@ in with pkgs.hax; {
       export DO_NOT_TRACK=1
 
       export MONOREPO_DIR="$HOME/mimir"
+      export LOCAL_OPS_USE_NIX=true
 
       # add local scripts to path
       export PATH="$PATH:$HOME/.bin/:$HOME/.local/bin"
