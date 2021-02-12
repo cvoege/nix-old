@@ -317,7 +317,7 @@ in with pkgs.hax; {
       format = "via [$symbol$state]($style) ";
     };
     kubernetes = {
-      disabled = false;
+      disabled = true;
       style = "fg:#326ce5";
     };
 

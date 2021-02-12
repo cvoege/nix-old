@@ -34,4 +34,5 @@ mv ~/.tmux.conf ~/.tmux.conf.old
 
 # enable home-manager and build packages
 home-manager switch
+. ~/.nix-profile/etc/profile.d/nix.sh
 ```
