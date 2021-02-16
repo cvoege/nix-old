@@ -114,6 +114,7 @@ in with pkgs.hax; {
       ripgrep-all
       rlwrap
       rsync
+      # ruby
       scc
       sd
       shellcheck
@@ -276,7 +277,7 @@ in with pkgs.hax; {
 
       # bash completions
       source ~/.nix-profile/etc/profile.d/bash_completion.sh
-      source ~/.nix-profile/etc/bash_completion.d/better-comma.sh
+      # source ~/.nix-profile/etc/bash_completion.d/better-comma.sh
       source ~/.nix-profile/share/bash-completion/completions/git
       source ~/.nix-profile/share/bash-completion/completions/ssh
     '';
