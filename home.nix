@@ -190,6 +190,14 @@ in with pkgs.hax; {
         .output stdout
       '';
     };
+
+    file.irbrc = {
+      target = ".irbrc";
+      text = ''
+        IRB.conf[:SAVE_HISTORY] = 2_000_000
+        IRB.conf[:HISTORY_FILE] = "#{ENV['HOME']}/.local/share/irb_history"
+      '';
+    };
   };
 
   programs.bash = {
@@ -240,7 +248,6 @@ in with pkgs.hax; {
       now = "date +%s";
 
       # local_ops
-      local_ops = "nix-local-env -d $HOME/hr/local_ops run python dev.py";
       lo = "local_ops";
       lor = "lo run";
       los = "lo status";
