@@ -278,7 +278,7 @@ in with pkgs.hax; {
       source ~/.nix-profile/etc/profile.d/nix.sh
       alias o=xdg-open
 
-      pack-epub() { zip -rX $1.epub $1/*; }
+      pack-epub() { zip -rX "../$(basename $(pwd)).epub" ./* ; }
 
       export NIX_HOME_PATH="$HOME/.config/nixpkgs"
       ehome() { code "$NIX_HOME_PATH/home.nix" ; }
