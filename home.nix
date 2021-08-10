@@ -98,6 +98,7 @@ in with pkgs.hax; {
       nix-prefetch-scripts
       nix-tree
       nixfmt
+      nodejs-16_x
       nmap
       openssh
       p7zip
@@ -130,6 +131,7 @@ in with pkgs.hax; {
       wget
       which
       xxd
+      yarn
       zip
       kwbauson-cfg.better-comma
       kwbauson-cfg.nle
@@ -247,11 +249,6 @@ in with pkgs.hax; {
       space = "du -Sh | sort -rh | head -10";
       now = "date +%s";
 
-      # local_ops
-      lo = "local_ops";
-      lor = "lo run";
-      los = "lo status";
-
       #nix
       nixc = "cd ~/.config/nixpkgs";
 
@@ -266,21 +263,25 @@ in with pkgs.hax; {
 
       export DO_NOT_TRACK=1
 
-      export MONOREPO_DIR="$HOME/mimir"
-      export LOCAL_OPS_USE_NIX=true
-
       # add local scripts to path
       export PATH="$PATH:$HOME/.bin/:$HOME/.local/bin"
+      export PATH="$PATH:$HOME/flutter/bin"
 
       # asdf and base nix
     '' + (if isDarwin then ''
-      source /usr/local/opt/asdf/asdf.sh
-      source /usr/local/opt/asdf/etc/bash_completion.d/asdf.bash
+      # source /usr/local/opt/asdf/asdf.sh
+      # source /usr/local/opt/asdf/etc/bash_completion.d/asdf.bash
     '' else ''
-      source $HOME/.asdf/asdf.sh
-      source $HOME/.asdf/completions/asdf.bash
+      # source $HOME/.asdf/asdf.sh
+      # source $HOME/.asdf/completions/asdf.bash
     '') + ''
       source ~/.nix-profile/etc/profile.d/nix.sh
+      alias o=xdg-open
+
+      pack-epub() { zip -rX $1.epub $1/*; }
+
+      export NIX_HOME_PATH="$HOME/.config/nixpkgs"
+      ehome() { code "$NIX_HOME_PATH/home.nix" ; }
 
       # bash completions
       source ~/.nix-profile/etc/profile.d/bash_completion.sh
@@ -292,7 +293,7 @@ in with pkgs.hax; {
 
   programs.direnv = {
     enable = true;
-    enableNixDirenvIntegration = true;
+    nix-direnv.enable = true;
   };
 
   programs.mcfly = {
@@ -369,6 +370,7 @@ in with pkgs.hax; {
     userEmail = personalEmail;
     aliases = {
       co = "checkout";
+      dad = "add";
       cam = "commit -am";
       ca = "commit -a";
       cm = "commit -m";
@@ -387,7 +389,7 @@ in with pkgs.hax; {
 
       # delete local branch and pull from remote
       fetchout =
-        "!f() { git co master; git branch -D $@; git fetch && git co $@; }; f";
+        "!f() { git co main; git branch -D $@; git fetch && git co $@; }; f";
       pufl = "!git push origin $(git branch-name) --force-with-lease";
       putf = "put --force-with-lease";
       shake = "remote prune origin";
