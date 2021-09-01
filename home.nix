@@ -75,6 +75,7 @@ in with pkgs.hax; {
       gnugrep
       gnused
       gnutar
+      google-cloud-sdk
       gron
       gzip
       htop
@@ -283,6 +284,9 @@ in with pkgs.hax; {
       export NIX_HOME_PATH="$HOME/.config/nixpkgs"
       ehome() { code "$NIX_HOME_PATH/home.nix" ; }
 
+      lintandpush() { yarn lint:fix && git add -A && git commit -m guh && git put ; }
+
+
       # bash completions
       source ~/.nix-profile/etc/profile.d/bash_completion.sh
       # source ~/.nix-profile/etc/bash_completion.d/better-comma.sh
@@ -296,10 +300,10 @@ in with pkgs.hax; {
     nix-direnv.enable = true;
   };
 
-  programs.mcfly = {
-    enable = true;
-    enableBashIntegration = true;
-  };
+  # programs.mcfly = {
+  #   enable = true;
+  #   enableBashIntegration = true;
+  # };
 
   # programs.fzf = {
   #   enable = true;
@@ -376,6 +380,7 @@ in with pkgs.hax; {
       cm = "commit -m";
       st = "status";
       br = "branch -v";
+      ff = "merge --ff-only";
       branch-name = "!git rev-parse --abbrev-ref HEAD";
       # Push current branch
       put = "!git push origin $(git branch-name)";
