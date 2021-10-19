@@ -285,7 +285,7 @@ in with pkgs.hax; {
       ehome() { code "$NIX_HOME_PATH/home.nix" ; }
 
       lput() { yarn lint:fix && git add -A && git commit -m "$@" && git put ; }
-      codedir() { EDITOR="code --wait" vidir "$@"; }
+      codedir() { EDITOR="code --wait" , vidir "$@"; }
 
       # bash completions
       source ~/.nix-profile/etc/profile.d/bash_completion.sh
