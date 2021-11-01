@@ -123,6 +123,7 @@ in with pkgs.hax; {
       shfmt
       socat
       sox
+      spotify
       swaks
       tealdeer
       time
@@ -404,7 +405,7 @@ in with pkgs.hax; {
       push.default = "simple";
       pull.ff = "only";
       core = {
-        editor = if isDarwin then "code --wait" else "nano";
+        editor = "code --wait";
         pager = "delta --dark";
       };
     };
