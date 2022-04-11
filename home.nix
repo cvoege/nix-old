@@ -2,6 +2,9 @@
 let
   inherit (pkgs.hax) isDarwin fetchFromGitHub;
 
+  promptChar = if isDarwin then "ᛗ" else "ᛥ";
+
+
   personalEmail = "cvoege+nix@gmail.com";
   workEmail = "colton+nix@hackerrank.com";
   firstName = "Colton";
@@ -151,34 +154,25 @@ in with pkgs.hax; {
     file.gitmessage = {
       target = ".gitmessage";
       text = ''
-        # [Tag]: Subject
-        []:
+        # Commit and PR name format
+        # [Type][Jira-ID]: Description
 
-        # Why
+        # For additions to the user experience
+        # [Feature][READ-###]: Description of feature
 
-        # Meta
+        # For fixes to user-facing bugs
+        # [Bugfix][READ-###]: Description of bug
 
+        # For techincal changes that are not user-facing
+        # [Tech][READ-###]: Description of techincal problem/debt addressed
 
+        # For non-technical, non-user-facing additions, such as new components or
+        # routes which are not yet surfaced in the application
+        # [Chore][READ-###]: Description of non-user-facing, non-technical addition
 
-        # Tag should be one of the following:
-        # * Feature (new feature)
-        # * Bugfix (bug fix)
-        # * QOL (Quality of Life fix)
-        # * Documentation (changes to documentation)
-        # * Style (change in code format, no logic change)
-        # * Refactor (refactoring production code)
-        # * Test (adding missing tests, refactoring tests; no production code change)
-        # * Chore (updating webpack or gulp tasks etc; no production code change)
+        # For things our bots do on their own
+        # [Tech][Auto]: Knapsack Report Update
 
-        # The first line should contain a type and a subject in the imperative tone.
-        #     i.e. [Feature]: Add dropdown list to contact select form.
-
-        # In the "Why" section, take a few lines to explain why this change was needed,
-        # what code the change effects, and any possible side effects of the change.
-
-        # Use "Meta" to add useful information like issue tracking id, signature (if working
-        # on an open source project, give a relevant identification), and any other relevant information
-        # about the project itself.
       '';
     };
 
@@ -317,9 +311,8 @@ in with pkgs.hax; {
   programs.starship.settings = {
     add_newline = false;
     character = rec {
-      symbol = if isDarwin then "ᛗ" else "ᛥ";
-      success_symbol = "[${symbol}](bright-green)";
-      error_symbol = "[${symbol}](bright-red)";
+      success_symbol = "[${promptChar}](bright-green)";
+      error_symbol = "[${promptChar}](bright-red)";
     };
     golang = {
       style = "fg:#00ADD8";
