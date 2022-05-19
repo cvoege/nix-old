@@ -28,7 +28,8 @@ let
     url = "https://cobi.dev/sounds/bruh.mp3";
     sha256 = "11n1a20a7fj80xgynfwiq3jaq1bhmpsdxyzbnmnvlsqfnsa30vy3";
   };
-in with pkgs.hax; {
+in
+with pkgs.hax; {
   # help:
   # https://rycee.gitlab.io/home-manager/options.html
 
@@ -101,7 +102,7 @@ in with pkgs.hax; {
       nix-prefetch-github
       nix-prefetch-scripts
       nix-tree
-      nixfmt
+      nixpkgs-fmt
       nodejs-16_x
       nmap
       openssh
@@ -130,6 +131,7 @@ in with pkgs.hax; {
       swaks
       tealdeer
       time
+      touchegg
       unzip
       watch
       watchexec
@@ -174,6 +176,11 @@ in with pkgs.hax; {
         # [Tech][Auto]: Knapsack Report Update
 
       '';
+    };
+
+    file.toucheggconf = {
+      target = ".config/touchegg/touchegg.conf";
+      source = ./config/touchegg.conf;
     };
 
     file.sqliterc = {
@@ -403,4 +410,27 @@ in with pkgs.hax; {
       };
     };
   };
+
+  systemd.user.services.touchegg-client = {
+    Unit = { Description = "touchegg-client"; };
+
+    Install = { WantedBy = [ "graphical-session.target" ]; };
+
+    Service = {
+      # Restart = "on-failure";
+      PrivateTmp = true;
+      ProtectSystem = "full";
+      ProtectHome = "yes";
+      Type = "exec";
+      Slice = "session.slice";
+      ExecStart = "${pkgs.touchegg}/bin/touchegg";
+    };
+  };
 }
+
+# sudo ln -s /home/cvoege/.nix-profile/lib/systemd/system/touchegg.service /etc/systemd/system/touchegg.service
+# sudo systemctl daemon-reload
+# sudo systemctl enable --now touchegg
+# sudo systemctl status touchegg
+# systemctl --user start touchegg-client.service
+
