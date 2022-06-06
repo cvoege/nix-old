@@ -148,7 +148,11 @@ with pkgs.hax; {
       # jacobi memes
       (with jacobi; [
         meme_sounds
-        general_pog_scripts
+        batwhich
+        slack_meme
+        jwtdecode
+        fif
+        rot13
         docker_pog_scripts
       ])
     ];
