@@ -10,24 +10,20 @@ let
   firstName = "Colton";
   lastName = "Voege";
   nameHint = "V as in Victor";
-  home = (builtins.getEnv "HOME");
-  username = (builtins.getEnv "USER");
+  home = builtins.getEnv "HOME";
+  username = builtins.getEnv "USER";
 
   # chief keefs stuff
   kwbauson-cfg = import <kwbauson-cfg>;
 
-  coinSound = pkgs.fetchurl {
-    url = "https://cobi.dev/sounds/coin.wav";
-    sha256 = "18c7dfhkaz9ybp3m52n1is9nmmkq18b1i82g6vgzy7cbr2y07h93";
-  };
-  guhSound = pkgs.fetchurl {
-    url = "https://cobi.dev/sounds/guh.wav";
-    sha256 = "1chr6fagj6sgwqphrgbg1bpmyfmcd94p39d34imq5n9ik674z9sa";
-  };
-  bruhSound = pkgs.fetchurl {
-    url = "https://cobi.dev/sounds/bruh.mp3";
-    sha256 = "11n1a20a7fj80xgynfwiq3jaq1bhmpsdxyzbnmnvlsqfnsa30vy3";
-  };
+  jacobi = import
+    (fetchTarball {
+      name = "jpetrucciani-2022-06-06";
+      url = "https://github.com/jpetrucciani/nix/archive/466aaaa6481e1cac95a83d12161576a51863afe5.tar.gz";
+      sha256 = "0agv1dvrllxmjhb2wssnqcb6iismpksz7k27zqqgrw8pz2w2k8ic";
+    })
+    { };
+
 in
 with pkgs.hax; {
   # help:
@@ -37,7 +33,7 @@ with pkgs.hax; {
   programs.home-manager.enable = true;
 
   home = {
-    username = username;
+    inherit username;
     homeDirectory = home;
 
     # The global home manager state version
@@ -54,11 +50,15 @@ with pkgs.hax; {
 
     packages = with lib; with pkgs; lib.flatten [
       (lib.optional stdenv.isLinux ungoogled-chromium)
-      (python3.withPackages (pkgs: with pkgs; [ black mypy bpython ipdb ]))
+      (python3.withPackages (pkgs: with pkgs; [
+        black
+        bpython
+        mypy
+      ]))
       amazon-ecr-credential-helper
       atool
       bash-completion
-      bashInteractive
+      bashInteractive_5
       bat
       bc
       bzip2
@@ -99,17 +99,12 @@ with pkgs.hax; {
       nix-bash-completions
       nix-index
       nix-info
-      nix-prefetch-github
-      nix-prefetch-scripts
-      nix-tree
       nixpkgs-fmt
       nodejs-16_x
       nmap
       openssh
       p7zip
       patch
-      perl
-      php
       pigz
       pssh
       procps
@@ -117,7 +112,6 @@ with pkgs.hax; {
       ranger
       re2c
       ripgrep
-      ripgrep-all
       rlwrap
       rsync
       # ruby
@@ -140,17 +134,23 @@ with pkgs.hax; {
       xxd
       yarn
       zip
-      kwbauson-cfg.better-comma
-      kwbauson-cfg.nle
-      kwbauson-cfg.fordir
-      kwbauson-cfg.git-trim
+      (with kwbauson-cfg; [
+        better-comma
+        nle
+        fordir
+        git-trim
+      ])
       (writeShellScriptBin "hms" ''
         git -C ~/.config/nixpkgs/ pull origin main
         home-manager switch
       '')
-      (soundScript "coin" coinSound)
-      (soundScript "guh" guhSound)
-      (soundScript "bruh" bruhSound)
+
+      # jacobi memes
+      (with jacobi; [
+        meme_sounds
+        general_pog_scripts
+        docker_pog_scripts
+      ])
     ];
 
     file.gitmessage = {
