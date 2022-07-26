@@ -18,9 +18,9 @@ let
 
   jacobi = import
     (fetchTarball {
-      name = "jpetrucciani-2022-06-06";
-      url = "https://github.com/jpetrucciani/nix/archive/466aaaa6481e1cac95a83d12161576a51863afe5.tar.gz";
-      sha256 = "0agv1dvrllxmjhb2wssnqcb6iismpksz7k27zqqgrw8pz2w2k8ic";
+      name = "jpetrucciani-2022-07-26";
+      url = "https://github.com/jpetrucciani/nix/archive/f9d139e4a2b80d0e4ba5585ce722493996b4bf44.tar.gz";
+      sha256 = "00bbaj4z7nzm29c47nv19afyaz3r3mdx8in7v6hdsqvfsnbmgd11";
     })
     { };
 
@@ -50,7 +50,7 @@ with pkgs.hax; {
 
     packages = with lib; with pkgs; lib.flatten [
       (lib.optional stdenv.isLinux ungoogled-chromium)
-      (python3.withPackages (pkgs: with pkgs; [
+      (python310.withPackages (pkgs: with pkgs; [
         black
         bpython
         mypy
@@ -148,6 +148,7 @@ with pkgs.hax; {
       # jacobi memes
       (with jacobi; [
         meme_sounds
+        aws_id
         batwhich
         slack_meme
         jwtdecode
@@ -236,23 +237,8 @@ with pkgs.hax; {
       dr = "docker run --rm -it";
       daq = "docker ps -aq";
       drma = "docker stop $(docker ps -aq) && docker rm -f $(docker ps -aq)";
-      drmi = "di | grep none | awk '{print $3}' | sponge | xargs docker rmi";
       dc = "docker-compose";
 
-      # k8s
-      k = "kubectl";
-      kx = "kubectx";
-      ka = "k get pods";
-      kaw = "k get pods -o wide";
-      knuke = "k delete pods --grace-period=0 --force";
-      klist =
-        "k get pods --all-namespaces -o jsonpath='{..image}' | tr -s '[[:space:]]' '\\n' | sort | uniq -c";
-
-      # aws stuff
-      aws_id = "aws sts get-caller-identity --query Account --output text";
-
-      # misc
-      rot13 = "tr 'A-Za-z' 'N-ZA-Mn-za-m'";
       space = "du -Sh | sort -rh | head -10";
       now = "date +%s";
 
@@ -260,8 +246,6 @@ with pkgs.hax; {
       nixc = "cd ~/.config/nixpkgs";
 
       stop-classroom = "docker kill  $(docker ps -a | grep class | awk '{print $1}') && docker kill  $(docker ps -a | grep integration | awk '{print $1}')";
-
-      # fzfp = "fzf --preview 'bat --style=numbers --color=always {}'";
     };
 
     initExtra = ''
