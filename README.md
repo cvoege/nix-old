@@ -23,9 +23,8 @@ nix-channel --update
 nix-shell '<home-manager>' -A install
 
 # pull repo into ~/.config/nixpkgs/
-cd ~/.config/nixpkgs
-rm ~/.config/nixpkgs/*
-git clone git@github.com:cvoege/nix.git .
+cd ~/.config
+git clone git@github.com:cvoege/nix.git nixpkgs
 
 # move unneeded files
 mv ~/.profile ~/.profile.old
