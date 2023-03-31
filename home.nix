@@ -14,7 +14,7 @@ let
   username = builtins.getEnv "USER";
 
   # chief keefs stuff
-  kwbauson-cfg = import <kwbauson-cfg>;
+  kwbauson-cfg = import <kwbauson-cfg> {};
 
   jacobi = import
     (fetchTarball {
@@ -50,15 +50,14 @@ with pkgs.hax; {
 
     packages = with lib; with pkgs; lib.flatten [
       (lib.optional stdenv.isLinux ungoogled-chromium)
-      (python310.withPackages (pkgs: with pkgs; [
+      (python311.withPackages (pkgs: with pkgs; [
         black
-        bpython
         mypy
       ]))
       amazon-ecr-credential-helper
       atool
       bash-completion
-      bashInteractive_5
+      bashInteractive
       bat
       bc
       bzip2
@@ -121,11 +120,11 @@ with pkgs.hax; {
       shfmt
       socat
       sox
-      spotify
+      # spotify
       swaks
       tealdeer
       time
-      touchegg
+      # touchegg
       unzip
       watch
       watchexec
@@ -141,7 +140,7 @@ with pkgs.hax; {
         git-trim
       ])
       (writeShellScriptBin "hms" ''
-        git -C ~/.config/nixpkgs/ pull origin main
+        git -C ~/.config/home-manager/ pull origin main
         home-manager switch
       '')
 
@@ -243,7 +242,7 @@ with pkgs.hax; {
       now = "date +%s";
 
       #nix
-      nixc = "cd ~/.config/nixpkgs";
+      nixc = "cd ~/.config/home-manager";
 
       stop-classroom = "docker kill  $(docker ps -a | grep class | awk '{print $1}') && docker kill  $(docker ps -a | grep integration | awk '{print $1}')";
     };
@@ -266,12 +265,12 @@ with pkgs.hax; {
       # source $HOME/.asdf/asdf.sh
       # source $HOME/.asdf/completions/asdf.bash
     '') + ''
-      source ~/.nix-profile/etc/profile.d/nix.sh
+      # source ~/.nix-profile/etc/profile.d/nix.sh
       alias o=xdg-open
 
       pack-epub() { zip -rX "../$(basename $(pwd)).epub" ./* ; }
 
-      export NIX_HOME_PATH="$HOME/.config/nixpkgs"
+      export NIX_HOME_PATH="$HOME/.config/home-manager"
       ehome() { code "$NIX_HOME_PATH/home.nix" ; }
 
       lput() { yarn lint:fix && git add -A && git commit -m "$@" && git put ; }

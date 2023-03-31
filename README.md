@@ -22,9 +22,10 @@ nix-channel --add https://github.com/kwbauson/cfg/archive/main.tar.gz kwbauson-c
 nix-channel --update
 nix-shell '<home-manager>' -A install
 
-# pull repo into ~/.config/nixpkgs/
-cd ~/.config
-git clone git@github.com:cvoege/nix.git nixpkgs
+# pull repo into ~/.config/home-manager/
+cd ~/.config/home-manager
+rm ~/.config/home-manager/*
+git clone git@github.com:cvoege/nix.git .
 
 # move unneeded files
 mv ~/.profile ~/.profile.old
@@ -35,5 +36,7 @@ mv ~/.tmux.conf ~/.tmux.conf.old
 
 # enable home-manager and build packages
 home-manager switch
-. ~/.nix-profile/etc/profile.d/nix.sh
+# . /Users/colton/.nix-profile/etc/profile.d/hm-session-vars.sh
+# . "$HOME/.nix-profile/etc/profile.d/hm-session-vars.sh"
+
 ```
