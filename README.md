@@ -12,7 +12,7 @@ curl -L https://nixos.org/nix/install | sh
 
 # configure nix to use more cpu/ram when building
 mkdir -p ~/.config/nix/
-echo 'max-jobs = auto' >>~/.config/nix/nix.conf
+echo -e 'max-jobs = auto\nexperimental-features = nix-command flakes' >~/.config/nix/nix.conf
 
 # Add necessary nix channels
 # nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
