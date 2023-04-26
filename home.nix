@@ -1,12 +1,13 @@
 { config, pkgs, lib, ... }:
 let
-  inherit (pkgs.hax) isDarwin fetchFromGitHub;
+  # inherit (pkgs.hax) isDarwin fetchFromGitHub;
 
+  isDarwin = true;
   promptChar = if isDarwin then "ᛗ" else "ᛥ";
 
 
   personalEmail = "cvoege+nix@gmail.com";
-  workEmail = "colton+nix@hackerrank.com";
+  workEmail = "colton@beacons.ai";
   firstName = "Colton";
   lastName = "Voege";
   nameHint = "V as in Victor";
@@ -14,7 +15,7 @@ let
   username = builtins.getEnv "USER";
 
   # chief keefs stuff
-  kwbauson-cfg = import <kwbauson-cfg> {};
+  kwbauson-cfg = import <kwbauson-cfg> { };
 
   jacobi = import
     (fetchTarball {
@@ -53,6 +54,7 @@ with pkgs.hax; {
       (python311.withPackages (pkgs: with pkgs; [
         black
         mypy
+        pip
       ]))
       amazon-ecr-credential-helper
       atool
@@ -64,6 +66,7 @@ with pkgs.hax; {
       cachix
       coreutils-full
       cowsay
+      crane
       curl
       deno
       diffutils
@@ -105,6 +108,7 @@ with pkgs.hax; {
       p7zip
       patch
       pigz
+      postgresql
       pssh
       procps
       pv
@@ -132,6 +136,7 @@ with pkgs.hax; {
       which
       xxd
       yarn
+      youtube-dl
       zip
       (with kwbauson-cfg; [
         better-comma
@@ -146,7 +151,7 @@ with pkgs.hax; {
 
       # jacobi memes
       (with jacobi; [
-        meme_sounds
+        # meme_sounds
         aws_id
         batwhich
         slack_meme
@@ -182,10 +187,10 @@ with pkgs.hax; {
       '';
     };
 
-    file.toucheggconf = {
-      target = ".config/touchegg/touchegg.conf";
-      source = ./config/touchegg.conf;
-    };
+    # file.toucheggconf = {
+    #   target = ".config/touchegg/touchegg.conf";
+    #   source = ./config/touchegg.conf;
+    # };
 
     file.sqliterc = {
       target = ".sqliterc";
@@ -244,7 +249,6 @@ with pkgs.hax; {
       #nix
       nixc = "cd ~/.config/home-manager";
 
-      stop-classroom = "docker kill  $(docker ps -a | grep class | awk '{print $1}') && docker kill  $(docker ps -a | grep integration | awk '{print $1}')";
     };
 
     initExtra = ''
@@ -255,18 +259,21 @@ with pkgs.hax; {
 
       # add local scripts to path
       export PATH="$PATH:$HOME/.bin/:$HOME/.local/bin"
-      export PATH="$PATH:$HOME/flutter/bin"
+      # export PATH="$PATH:$HOME/flutter/bin"
 
       # asdf and base nix
     '' + (if isDarwin then ''
       # source /usr/local/opt/asdf/asdf.sh
       # source /usr/local/opt/asdf/etc/bash_completion.d/asdf.bash
+      [[ -f /opt/homebrew/bin/brew ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+      [[ -d /Applications/Docker.app/Contents/Resources/bin/ ]] && export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
+      alias o=open
     '' else ''
       # source $HOME/.asdf/asdf.sh
       # source $HOME/.asdf/completions/asdf.bash
+      alias o=xdg-open
     '') + ''
       # source ~/.nix-profile/etc/profile.d/nix.sh
-      alias o=xdg-open
 
       pack-epub() { zip -rX "../$(basename $(pwd)).epub" ./* ; }
 
@@ -281,6 +288,8 @@ with pkgs.hax; {
       # source ~/.nix-profile/etc/bash_completion.d/better-comma.sh
       source ~/.nix-profile/share/bash-completion/completions/git
       source ~/.nix-profile/share/bash-completion/completions/ssh
+
+      alias guh="git add -A ; git commit -m guh ; git put"
     '';
   };
 
@@ -359,7 +368,7 @@ with pkgs.hax; {
     enable = true;
     package = pkgs.gitAndTools.gitFull;
     userName = "${firstName} ${lastName}";
-    userEmail = personalEmail;
+    userEmail = workEmail;
     aliases = {
       co = "checkout";
       dad = "add";
@@ -398,21 +407,21 @@ with pkgs.hax; {
     };
   };
 
-  systemd.user.services.touchegg-client = {
-    Unit = { Description = "touchegg-client"; };
+  # systemd.user.services.touchegg-client = {
+  #   Unit = { Description = "touchegg-client"; };
 
-    Install = { WantedBy = [ "graphical-session.target" ]; };
+  #   Install = { WantedBy = [ "graphical-session.target" ]; };
 
-    Service = {
-      # Restart = "on-failure";
-      PrivateTmp = true;
-      ProtectSystem = "full";
-      ProtectHome = "yes";
-      Type = "exec";
-      Slice = "session.slice";
-      ExecStart = "${pkgs.touchegg}/bin/touchegg";
-    };
-  };
+  #   Service = {
+  #     # Restart = "on-failure";
+  #     PrivateTmp = true;
+  #     ProtectSystem = "full";
+  #     ProtectHome = "yes";
+  #     Type = "exec";
+  #     Slice = "session.slice";
+  #     ExecStart = "${pkgs.touchegg}/bin/touchegg";
+  #   };
+  # };
 }
 
 # sudo ln -s /home/cvoege/.nix-profile/lib/systemd/system/touchegg.service /etc/systemd/system/touchegg.service
