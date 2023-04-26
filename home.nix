@@ -136,7 +136,6 @@ with pkgs.hax; {
       which
       xxd
       yarn
-      youtube-dl
       zip
       (with kwbauson-cfg; [
         better-comma
