@@ -3,7 +3,9 @@ let
   # inherit (pkgs.hax) isDarwin fetchFromGitHub;
 
   isDarwin = true;
-  promptChar = if isDarwin then "ᛗ" else "ᛥ";
+  # successPromptChar = if isDarwin then "ᛗ" else "ᛥ";
+  successPromptChar = "👌";
+  errorPromptChar = "👀";
 
 
   personalEmail = "cvoege+nix@gmail.com";
@@ -26,7 +28,8 @@ let
     { };
 
 in
-with pkgs.hax; {
+{
+  # nixpkgs.overlays = [ (import ./overlays.nix) ];
   # help:
   # https://rycee.gitlab.io/home-manager/options.html
 
@@ -102,7 +105,7 @@ with pkgs.hax; {
       nix-index
       nix-info
       nixpkgs-fmt
-      nodejs-16_x
+      nodejs_20
       nmap
       openssh
       p7zip
@@ -288,7 +291,17 @@ with pkgs.hax; {
       source ~/.nix-profile/share/bash-completion/completions/git
       source ~/.nix-profile/share/bash-completion/completions/ssh
 
-      alias guh="git add -A ; git commit -m guh ; git put"
+      guh() {
+        MSG="guh"
+        if [ $# -gt 0 ] ; then
+          MSG="$@"
+        fi
+        git add -A
+        git commit -m "$MSG"
+        git put
+      }
+
+      alias guhlint="lint-all && guh lint"
     '';
   };
 
@@ -313,8 +326,8 @@ with pkgs.hax; {
   programs.starship.settings = {
     add_newline = false;
     character = rec {
-      success_symbol = "[${promptChar}](bright-green)";
-      error_symbol = "[${promptChar}](bright-red)";
+      success_symbol = "[${successPromptChar}](bright-green)";
+      error_symbol = "[${errorPromptChar}](bright-red)";
     };
     golang = {
       style = "fg:#00ADD8";
@@ -368,6 +381,9 @@ with pkgs.hax; {
     package = pkgs.gitAndTools.gitFull;
     userName = "${firstName} ${lastName}";
     userEmail = workEmail;
+    lfs = {
+      enable = true;
+    };
     aliases = {
       co = "checkout";
       dad = "add";
@@ -399,6 +415,9 @@ with pkgs.hax; {
       color.ui = true;
       push.default = "simple";
       pull.ff = "only";
+      init = {
+        defaultBranch = "main";
+      };
       core = {
         editor = "code --wait";
         pager = "delta --dark";
