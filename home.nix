@@ -21,9 +21,9 @@ let
 
   jacobi = import
     (fetchTarball {
-      name = "jpetrucciani-2022-07-26";
-      url = "https://github.com/jpetrucciani/nix/archive/f9d139e4a2b80d0e4ba5585ce722493996b4bf44.tar.gz";
-      sha256 = "00bbaj4z7nzm29c47nv19afyaz3r3mdx8in7v6hdsqvfsnbmgd11";
+      name = "jpetrucciani-2023-08-14";
+      url = "https://github.com/jpetrucciani/nix/archive/f6c961b0a474cf45ceeb5a414a52c6f967035efa.tar.gz";
+      sha256 = "0cdd3pfn89kbqwxax6hfg2fn8k90bfd0afavx03604wij8mbjs46";
     })
     { };
 
@@ -94,7 +94,7 @@ in
       kubectl
       kubectx
       ## thanks google
-      # gke-gcloud-auth-plugin
+      jacobi.gke-gcloud-auth-plugin
 
       gron
       gzip
@@ -172,6 +172,7 @@ in
         fif
         rot13
         docker_pog_scripts
+        k8s_pog_scripts
       ])
     ];
 
