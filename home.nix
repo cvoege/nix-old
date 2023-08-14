@@ -50,6 +50,7 @@ in
       PAGER = "less";
       LESS = "-iR";
       BASH_SILENCE_DEPRECATION_WARNING = "1";
+      USE_GKE_GCLOUD_AUTH_PLUGIN = "True";
     };
 
     packages = with lib; with pkgs; lib.flatten [
@@ -71,20 +72,30 @@ in
       cowsay
       crane
       curl
+      nodePackages.firebase-tools
       deno
       diffutils
       dos2unix
       ed
+      croc
       exa
       fd
       file
       figlet
+      findutils
       gawk
       gitAndTools.delta
       gnugrep
       gnused
       gnutar
       google-cloud-sdk
+
+      # kubernetes
+      kubectl
+      kubectx
+      ## thanks google
+      # gke-gcloud-auth-plugin
+
       gron
       gzip
       htop
@@ -291,13 +302,22 @@ in
       source ~/.nix-profile/share/bash-completion/completions/git
       source ~/.nix-profile/share/bash-completion/completions/ssh
 
+      gu() {
+        MSG="guh"
+        if [ $# -gt 0 ] ; then
+          MSG="$@"
+        fi
+        git add -A
+        git commit -nm "$MSG"
+      }
+
       guh() {
         MSG="guh"
         if [ $# -gt 0 ] ; then
           MSG="$@"
         fi
         git add -A
-        git commit -m "$MSG"
+        git commit -nm "$MSG"
         git put
       }
 
@@ -397,7 +417,7 @@ in
       # Push current branch
       put = "!git push origin $(git branch-name)";
       # Pull without merging
-      get = "!git pull origin $(git branch-name) --ff-only";
+      get = "!git pull origin $(git branch-name)";
       # Pull Master without switching branches
       got =
         "!f() { CURRENT_BRANCH=$(git branch-name) && git checkout $1 && git pull origin $1 --ff-only && git checkout $CURRENT_BRANCH;  }; f";
